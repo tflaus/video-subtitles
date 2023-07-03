@@ -2,7 +2,8 @@ import os
 import openai
 from dotenv import load_dotenv
 from pydub import AudioSegment
-from moviepy.editor import VideoFileClip, CompositeVideoClip, TextClip
+from streamlit import secrets
+#from moviepy.editor import VideoFileClip, CompositeVideoClip, TextClip
 
 
 class WhisperTranscriber:
@@ -11,7 +12,7 @@ class WhisperTranscriber:
         load_dotenv()
 
         # Retrieve the API key from the environment variables
-        api_key = os.getenv("OPENAI_API_KEY")
+        api_key = secrets["OPENAI_API_KEY"]
 
         # Check if the API key is set
         if api_key is None:
@@ -63,46 +64,46 @@ class WhisperTranscriber:
 
         return timestamps
     
-    def create_subtitle_clips(self, timestamps, videosize, fontsize=24, font='Arial', color='yellow'):
-        subtitle_clips = []
+    # def create_subtitle_clips(self, timestamps, videosize, fontsize=24, font='Arial', color='yellow'):
+    #     subtitle_clips = []
 
-        for timestamp in timestamps:
-            start_time, end_time, text = timestamp
-            duration = end_time - start_time
+    #     for timestamp in timestamps:
+    #         start_time, end_time, text = timestamp
+    #         duration = end_time - start_time
 
-            video_width, video_height = videosize
+    #         video_width, video_height = videosize
 
-            text_clip = TextClip(
-                text,
-                fontsize=fontsize,
-                font=font,
-                color=color,
-                bg_color='black',
-                size=(video_width * 3 / 4, None),
-                method='caption'
-            ).set_start(start_time).set_duration(duration)
+    #         text_clip = TextClip(
+    #             text,
+    #             fontsize=fontsize,
+    #             font=font,
+    #             color=color,
+    #             bg_color='black',
+    #             size=(video_width * 3 / 4, None),
+    #             method='caption'
+    #         ).set_start(start_time).set_duration(duration)
 
-            subtitle_x_position = 'center'
-            subtitle_y_position = video_height * 4 / 5
+    #         subtitle_x_position = 'center'
+    #         subtitle_y_position = video_height * 4 / 5
 
-            text_position = (subtitle_x_position, subtitle_y_position)
-            subtitle_clips.append(text_clip.set_position(text_position))
+    #         text_position = (subtitle_x_position, subtitle_y_position)
+    #         subtitle_clips.append(text_clip.set_position(text_position))
 
-        return subtitle_clips
+    #     return subtitle_clips
 
 
-    def add_subtitles_to_video(self, video_path, timestamps, output_path):
-        # Load the video clip
-        video = VideoFileClip(video_path)
+    # def add_subtitles_to_video(self, video_path, timestamps, output_path):
+    #     # Load the video clip
+    #     video = VideoFileClip(video_path)
 
-        # Create subtitle clips
-        subtitle_clips = self.create_subtitle_clips(timestamps,video.size)
+    #     # Create subtitle clips
+    #     subtitle_clips = self.create_subtitle_clips(timestamps,video.size)
 
-        # Add subtitles to the video
-        final_video = CompositeVideoClip([video] + subtitle_clips)
+    #     # Add subtitles to the video
+    #     final_video = CompositeVideoClip([video] + subtitle_clips)
 
-        # Write output video file
-        final_video.write_videofile(output_path)
+    #     # Write output video file
+    #     final_video.write_videofile(output_path)
 
 
 
